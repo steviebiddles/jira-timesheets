@@ -20,19 +20,19 @@ import (
 	"github.com/mitchellh/go-homedir"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
+	"gopkg.in/go-playground/validator.v9"
 	"os"
+)
+
+var (
+	validate *validator.Validate
 )
 
 // configCmd represents the config command
 var configCmd = &cobra.Command{
 	Use:   "config [host] [email] [apiToken]",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Configure credentials for jira",
+	Long: `Configure credentials for jira and a user.`,
 	Args: func(cmd *cobra.Command, args []string) error {
 		if len(args) != 3 {
 			return errors.New("host, email and apiToken are all required")
@@ -42,6 +42,21 @@ to quickly create a Cobra application.`,
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("config called")
+
+		validate = validator.New()
+		errs := validate.Var(args[0], "required,url")
+		if errs != nil {
+			fmt.Println("Invalid url provided")
+		}
+
+		errs = validate.Var(args[1], "required,email")
+		if errs != nil {
+			fmt.Println("Invalid email provided")
+		}
+
+		if errs != nil {
+			os.Exit(1)
+		}
 
 		home, err := homedir.Dir()
 		if err != nil {
@@ -92,14 +107,4 @@ to quickly create a Cobra application.`,
 
 func init() {
 	rootCmd.AddCommand(configCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// configCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// configCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
