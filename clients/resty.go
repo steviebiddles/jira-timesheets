@@ -14,7 +14,6 @@ func initClient() {
 	resty.SetHeaders(map[string]string{
 		"Content-Type": "application/json",
 	})
-	resty.SetDisableWarn(true)
 	resty.SetBasicAuth(
 		viper.GetString("email"),
 		viper.GetString("apiToken"),

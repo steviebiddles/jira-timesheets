@@ -17,6 +17,7 @@ package cmd
 import (
 	"errors"
 	"fmt"
+	"github.com/fatih/color"
 	"github.com/mitchellh/go-homedir"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
@@ -41,21 +42,19 @@ var configCmd = &cobra.Command{
 		return nil
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("config called")
-
 		validate = validator.New()
 		errs := validate.Var(args[0], "required,url")
 		if errs != nil {
-			fmt.Println("Invalid url provided")
+			color.Red("Invalid url provided")
 		}
 
 		errs = validate.Var(args[1], "required,email")
 		if errs != nil {
-			fmt.Println("Invalid email provided")
+			color.Red("Invalid email provided")
 		}
 
 		if errs != nil {
-			os.Exit(1)
+			return
 		}
 
 		home, err := homedir.Dir()
@@ -102,6 +101,8 @@ var configCmd = &cobra.Command{
 			fmt.Println(err)
 			os.Exit(1)
 		}
+
+		fmt.Println(fmt.Sprintf("Created config file %s%s", configDir, configFile))
 	},
 }
 

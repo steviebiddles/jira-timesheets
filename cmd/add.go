@@ -46,20 +46,22 @@ var addCmd = &cobra.Command{
 		fmt.Println("---")
 
 		if viper.GetString("date") != "" {
-			t, err := time.Parse("2006-01-02 15:04:05",  viper.GetString("date") + " 12:01:00")
+			t, err := time.Parse("2006-01-02 15:04:05.000",  viper.GetString("date") + " 12:01:00.000")
 			if err != nil {
 				log.Fatal(err)
 			}
 
-			started = t.Format("2006-01-02T15:04:05.999-0700")
+			started = t.Format("2006-01-02T15:04:05.000-0700")
 		} else {
 			t := time.Now().UTC()
-			started = t.Format("2006-01-02T15:04:05.999-0700")
+			started = t.Format("2006-01-02T15:04:05.000-0700")
 		}
 
 		timeSpentSeconds = getTimeSpentInSeconds(viper.GetFloat64("hours"), viper.GetFloat64("minutes"))
 		payload := models.Worklog{
 			Comment: models.Comment{
+				Type: "doc",
+				Version: 1,
 				Content: []models.Content{
 					{
 						Type: "paragraph",

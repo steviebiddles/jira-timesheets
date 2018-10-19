@@ -2,6 +2,7 @@ package models
 
 type Comment struct {
 	Type    string    `json:"type,omitempty"`
+	Version int       `json:"version,omitempty"`
 	Content []Content `json:"content"`
 }
 

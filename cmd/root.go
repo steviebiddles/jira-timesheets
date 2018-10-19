@@ -31,7 +31,7 @@ var rootCmd = &cobra.Command{
 	Short: "Jira timesheet operations",
 	Long: `Perform timesheet operations using Jira REST APIs.
 
-Basic Authentiction is used so first obtain your
+Basic Authentication is used so first obtain your
 API token at https://confluence.atlassian.com/cloud/api-tokens-938839638.html`,
 }
 
@@ -63,10 +63,8 @@ func initConfig() {
 
 	configDir := fmt.Sprintf("%s/.jt", home)
 
-	// Search config in home directory with name ".jira-timesheets" (without extension).
+	// Search config in  directory with name ".conf" (without extension).
 	viper.AddConfigPath(configDir)
-	//viper.AddConfigPath(".")
-	//viper.SetConfigName("jira-timesheets")
 	viper.SetConfigName("conf")
 
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
@@ -74,6 +72,7 @@ func initConfig() {
 
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
+		fmt.Println("---")
 		fmt.Println("Using config file:", viper.ConfigFileUsed())
 	}
 }
